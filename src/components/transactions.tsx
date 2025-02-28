@@ -1,19 +1,23 @@
-import {useNavigation} from '@react-navigation/native';
-import React from 'react';
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
-import {ScreenNames} from '../constants/screensName';
+import { useNavigation } from "@react-navigation/native";
+import React from "react";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { ScreenNames } from "../constants/screensName";
+import Icon from "react-native-vector-icons/MaterialIcons";
 
-const TransactionItem = ({name, subtext, type, amount, index}) => {
-  const amountColor = index % 3 === 0 ? '#4CAF50' : '#333'; // Light green for every 3rd transaction
+const TransactionItem = ({ name, subtext, type, amount, index }) => {
+  const isGreen = index % 3 === 0;
+  const amountColor = isGreen ? "#4CAF50" : "#333"; // Light green for every 3rd transaction
+  const formattedAmount = isGreen ? `+\u0024${amount}` : `\u0024${amount}`;
 
   return (
     <TouchableOpacity style={styles.transactionItem}>
       {/* Name & Amount in the same row */}
       <View style={styles.row}>
         <Text style={styles.transactionName}>{type}</Text>
-        <Text style={[styles.transactionAmount, {color: amountColor}]}>
-          ${amount}
+        <Text style={[styles.transactionAmount, { color: amountColor }]}>
+          {formattedAmount}
         </Text>
+        <Icon name="chevron-right" size={22} color={amountColor} />
       </View>
       {/* Subtext and Type below */}
       {subtext && <Text style={styles.transactionSubtext}>{subtext}</Text>}
@@ -22,10 +26,10 @@ const TransactionItem = ({name, subtext, type, amount, index}) => {
 };
 
 // TransactionList.js
-const TransactionList = ({transactions}) => {
+const TransactionList = ({ transactions }) => {
   const navigation = useNavigation();
   const groupedTransactions = transactions.reduce((groups, transaction) => {
-    const {date} = transaction;
+    const { date } = transaction;
     if (!groups[date]) {
       groups[date] = [];
     }
@@ -40,7 +44,8 @@ const TransactionList = ({transactions}) => {
         <TouchableOpacity
           onPress={() =>
             navigation.navigate(ScreenNames.TransactionScreen as never)
-          }>
+          }
+        >
           <Text style={styles.viewAllButton}>View All</Text>
         </TouchableOpacity>
       </View>
@@ -73,61 +78,65 @@ const styles = StyleSheet.create({
     marginBottom: 80,
   },
   sectionHeader: {
-    backgroundColor: 'white',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    backgroundColor: "white",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 6,
     paddingVertical: 16,
     padding: 8,
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: '500',
-    fontFamily: 'Arial',
+    fontWeight: "500",
+    fontFamily: "Arial",
   },
   viewAllButton: {
-    color: '#0277bd',
-    fontFamily: 'Arial',
+    color: "#0277bd",
+    fontFamily: "Arial",
   },
   transactionDate: {
-    color: '#666',
+    color: "#000000",
     fontSize: 14,
     marginBottom: 8,
-    fontFamily: 'Arial',
+    fontFamily: "Arial",
+    fontWeight: "700",
   },
   transactionItem: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     paddingVertical: 12,
-    paddingHorizontal: 8,
+    paddingHorizontal: 4,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: "#eee",
   },
   row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingRight: 15,
   },
   transactionName: {
     fontSize: 16,
-    color: '#333',
-    fontFamily: 'Arial',
+    color: "#333",
+    fontFamily: "Arial",
+    width: "75%",
   },
   transactionAmount: {
     fontSize: 16,
-    fontWeight: '500',
-    fontFamily: 'Arial',
+    fontWeight: "500",
+    fontFamily: "Arial",
+    marginLeft: 10,
   },
   transactionSubtext: {
     fontSize: 14,
-    color: '#666',
-    fontFamily: 'Arial',
+    color: "#666",
+    fontFamily: "Arial",
   },
   transactionType: {
     fontSize: 14,
-    color: '#666',
-    fontFamily: 'Arial',
+    color: "#666",
+    fontFamily: "Arial",
   },
 });
 
-export {TransactionItem, TransactionList};
+export { TransactionItem, TransactionList };
